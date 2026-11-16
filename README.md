@@ -92,6 +92,29 @@ Probabilidad: 97.34 %
 
 ## 📊 Resultados
 
-> **TODO**: Completar esta sección con los resultados del entrenamiento
-> (precisión/loss en train y validación, matriz de confusión, ejemplos de
-> predicciones, etc.).
+### Arquitectura
+
+CNN secuencial construida con Keras:
+
+- Capa de **aumentación de datos** (flip horizontal, rotación 0.1, zoom 0.1)
+- **Rescaling(1./255)** interna (por eso las entradas no se normalizan en la app)
+- 3 bloques `Conv2D + MaxPooling` con 32, 64 y 128 filtros
+- `Dropout(0.3)` → `Flatten` → `Dense(128)` → salida `softmax` de 5 clases
+- Optimizador **Adam**, pérdida `sparse_categorical_crossentropy`
+
+### Entrenamiento
+
+- Split **70/30** (train/validación, con el conjunto de test fijado a partir del 30 %)
+- **EarlyStopping** monitorizando `val_accuracy` (patience=4, restaurando los mejores pesos)
+- Detenido en la **época 13/25**; mejor **val_accuracy: 74.91 %**
+
+Curvas de accuracy y loss durante el entrenamiento:
+
+![Curvas de entrenamiento](assets/training_curves.png)
+
+### Ejemplos de predicciones
+
+Muestra de 12 imágenes del conjunto de prueba con la clase real, la predicción
+y su confianza:
+
+![Ejemplos de predicciones](assets/predictions_sample.png)
